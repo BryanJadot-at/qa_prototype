@@ -1,0 +1,6 @@
+streamlit
+pyairtable
+graphviz
+langchain
+openai
+pandas
