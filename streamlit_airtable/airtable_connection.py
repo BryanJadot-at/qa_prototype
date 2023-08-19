@@ -7,13 +7,14 @@ import pandas as pd
 
 
 class AirtableConnection(ExperimentalBaseConnection[Base]):
-    """Basic st.experimental_connection implementation for DuckDB"""
-
     # Establish a connection to Airtable using personal access token and base ID
     def _connect(self, **kwargs) -> Base:
-        personal_access_token = self._secrets["personal_access_token"]
+        if "personal_access_token" not in kwargs:
+            raise ValueError(
+                "personal_access_token must be provided"
+            )
         
-        return Api(personal_access_token)
+        return Api(kwargs["personal_access_token"])
 
     # List bases (the personal access token has access to)
     # Uses pyAirtable's metadata.get_base_schema method
