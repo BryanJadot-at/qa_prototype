@@ -47,7 +47,7 @@ with st.container():
             "What is your Airtable API key?",
             value="",
             type="password",
-            help="You can find your API key at https://airtable.com/create/tokens. You'll need to grant it data.records:red and schema.bases:read permissions.",
+            help="You can find your API key at https://airtable.com/create/tokens. You'll need to grant it data.records\:read and schema.bases\:read permissions.",
         )
 
     if openai_api_key != "" and personal_access_token != "":
