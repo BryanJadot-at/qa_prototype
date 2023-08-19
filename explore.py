@@ -180,6 +180,7 @@ with st.container():
                             For example, avoid queries that return all rows in the dataframe unless absolutely necessary.
 
                             Also, make sure to avoid returning code.  Ensure that you are returning real information based on the base.
+                            Do not say which variable the value is stored in.  Print the value itself.
                             """
                     )
                     
