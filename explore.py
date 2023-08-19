@@ -126,10 +126,9 @@ with st.container():
                 # Initiate language model
                 llm = ChatOpenAIWrapper(
                     model_name="gpt-4-32k",
-                    temperature=0.2,
+                    temperature=0,
                     openai_api_key=openai_api_key,
                 )
-                #print(tabulate(df_for_ai.head(1)))
 
                 # Create Pandas DataFrame Agent
                 agent = create_pandas_dataframe_agent(
@@ -137,7 +136,15 @@ with st.container():
                     df_for_ai,
                     verbose=True,
                     #agent_type=AgentType.OPENAI_FUNCTIONS,
-                    number_of_head_rows=1
+                    number_of_head_rows=1,
+                    prefix="""
+                        You are working with a pandas dataframe in Python. The name of the dataframe is `df`.
+                        Keep in mind that you have a limited context window.
+                        This means you should avoid queries that will generate a large amount of data unless absolutely necessary.
+                        For example, avoid queries that return all rows in the dataframe unless absolutely necessary.
+
+                        Also, make sure to avoid returning code.  Ensure that you are returning real information based on the base.
+                        """
                 )
                 # Perform Query using the Agent
                 response = {"content": agent.run(prompt), "role": "assistant"}

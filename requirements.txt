@@ -4,3 +4,4 @@ graphviz
 langchain
 openai
 pandas
+tabulate

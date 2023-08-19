@@ -19,9 +19,9 @@ class ChatOpenAIWrapper(ChatOpenAI):
         stream: Optional[bool] = None,
         **kwargs: Any,
     ) -> ChatResult:
-        #print('<request>\n')
-        #print(str(messages) + '\n')
-        #print('</request>\n')
+        print('<request>\n')
+        print(str(messages) + '\n')
+        print('</request>\n')
 
         chat_result = super()._generate(messages, stop, run_manager, stream, **kwargs)
         
