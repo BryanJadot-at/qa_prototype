@@ -10,6 +10,21 @@ from langchain.agents.agent_types import AgentType
 from streamlit_airtable import AirtableConnection
 from chat_open_ai_wrapper import ChatOpenAIWrapper
 
+def write_response(message):
+    with st.chat_message(message["role"]):
+        st.write(message["output"])
+        with st.expander("See the agent's thoughts"):
+            for [thought, observation] in message["intermediate_steps"]:
+                st.subheader("Thought")
+                st.text(f"\n{thought.log}")
+                st.subheader("Action")
+                st.text(f"\n{thought.tool}")
+                st.subheader("Action input")
+                st.text(f"\n{thought.tool_input}")
+                st.subheader("Observation")
+                st.text(f"\n{observation[0:1000]}")
+                st.divider()
+
 # Initiate connection to Airtable using st.experimental_connection
 airtable_conn = st.experimental_connection("bryan_connection", type=AirtableConnection)
 openai_api_key = st.secrets["openai_api_key"]
@@ -105,12 +120,13 @@ with st.container():
             ]
 
         for msg in st.session_state.messages:
-            st.chat_message(msg["role"]).write(msg["content"])
+            write_response(msg)
+            #st.chat_message(msg["role"]).write(msg["output"])
 
         if prompt := st.chat_input(
             f"Enter a question about the '{table_for_ai}' table"
         ):
-            st.session_state.messages.append({"role": "user", "content": prompt})
+            st.session_state.messages.append({"role": "user", "output": prompt, "intermediate_steps": []})
             st.chat_message("user").write(prompt)
 
             with st.spinner("Generating response ..."):
@@ -137,6 +153,7 @@ with st.container():
                     verbose=True,
                     #agent_type=AgentType.OPENAI_FUNCTIONS,
                     number_of_head_rows=1,
+                    return_intermediate_steps=True,
                     prefix="""
                         You are working with a pandas dataframe in Python. The name of the dataframe is `df`.
                         Keep in mind that you have a limited context window.
@@ -146,8 +163,10 @@ with st.container():
                         Also, make sure to avoid returning code.  Ensure that you are returning real information based on the base.
                         """
                 )
-                # Perform Query using the Agent
-                response = {"content": agent.run(prompt), "role": "assistant"}
+                
+                response = agent({"input": prompt, "role": "assistant"})
 
             st.session_state.messages.append(response)
-            st.chat_message("assistant").write(response["content"])
+            write_response(response)
+
+
