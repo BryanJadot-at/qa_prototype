@@ -50,8 +50,6 @@ with st.container():
             help="You can find your API key at https://airtable.com/create/tokens. You'll need to grant it data.records:red and schema.bases:read permissions.",
         )
 
-    print(openai_api_key, personal_access_token)
-
     if openai_api_key != "" and personal_access_token != "":
                 # Initiate connection to Airtable using st.experimental_connection
         airtable_conn = st.experimental_connection("bryan_connection", type=AirtableConnection, personal_access_token=personal_access_token)
@@ -164,7 +162,7 @@ with st.container():
                     llm = ChatOpenAIWrapper(
                         model_name="gpt-4-32k",
                         temperature=0,
-                        openai_api_key=openai_api_key,
+                        openai_api_key=openai_api_key,   
                     )
 
                     # Create Pandas DataFrame Agent
@@ -172,7 +170,7 @@ with st.container():
                         llm,
                         df_for_ai,
                         verbose=True,
-                        #agent_type=AgentType.OPENAI_FUNCTIONS,
+                        agent_type=AgentType.OPENAI_FUNCTIONS,
                         number_of_head_rows=1,
                         return_intermediate_steps=True,
                         prefix="""
