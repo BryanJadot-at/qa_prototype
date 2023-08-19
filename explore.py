@@ -22,7 +22,9 @@ def write_response(message):
                 st.subheader("Action input")
                 st.text(f"\n{thought.tool_input}")
                 st.subheader("Observation")
-                st.text(f"\n{str(observation[0:300])}")
+                if isinstance(observation, str):
+                    observation = observation[:500]
+                st.text(f"\n{str(observation)}")
                 st.divider()
 
 # Main content pane
